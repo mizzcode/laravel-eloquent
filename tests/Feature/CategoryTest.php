@@ -18,4 +18,26 @@ class CategoryTest extends TestCase
 
         self::assertTrue($result);
     }
+
+    public function testInsertMany() {
+        $categories = [];
+
+        for ($i = 1; $i <= 10; $i++) {
+            $categories[] = [
+                "id" => "ID - $i",
+                "name" => "NAME - $i"
+            ];
+        }
+
+        // bisa seperti ini pakai query
+        // Category::query()->insert($categories);
+        // atau
+        $result = Category::insert($categories);
+
+        self::assertTrue($result);
+
+        $total = Category::query()->count();
+
+        self::assertEquals(10, $total);
+    }
 }
