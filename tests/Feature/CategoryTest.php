@@ -88,5 +88,29 @@ class CategoryTest extends TestCase
             $category->update();
         });
     }
+
+    public function testUpdateMany() {
+        // membuat categories untuk menampung data
+        $categories = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = [
+                "id" => "id-$i",
+                "name" => "name-$i"
+            ];
+        }
+        // insert
+        $result = Category::query()->insert($categories);
+        // pastikan true jika berhasil insert
+        self::assertTrue($result);
+        // update description yang value nya null
+        Category::query()->whereNull("description")->update([
+            "description" => "updated"
+        ]);
+        // menghitung description yang sudah di update
+        $count = Category::query()->where("description", "=", "updated")->count();
+        
+        self::assertEquals(10, $count);
+    }
 }
 
