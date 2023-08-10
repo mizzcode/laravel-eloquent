@@ -109,8 +109,22 @@ class CategoryTest extends TestCase
         ]);
         // menghitung description yang sudah di update
         $count = Category::query()->where("description", "=", "updated")->count();
-        
+
         self::assertEquals(10, $count);
+    }
+
+    public function testDelete() {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::query()->find("FOOD");
+
+        $result = $category->delete();
+
+        self::assertTrue($result);
+
+        $total = Category::query()->count();
+
+        self::assertEquals(0, $total);
     }
 }
 
