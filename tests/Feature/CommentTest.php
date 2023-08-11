@@ -21,4 +21,16 @@ class CommentTest extends TestCase
 
         Log::info(json_encode($comment));
     }
+
+    public function testAttributesDefaultValue() {
+        // kita tidak set untuk title dan message
+        // nanti akan di handle oleh attributes di model untuk memberikan default value nya
+        $comment = new Comment;
+        $comment->email = "mizz@gmail.com";
+        $comment->save();
+
+        self::assertNotNull($comment->id);
+
+        Log::info(json_encode($comment));
+    }
 }
