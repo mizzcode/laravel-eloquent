@@ -149,5 +149,47 @@ class CategoryTest extends TestCase
 
         self::assertEquals(0, $total);
     }
+
+    public function testCreate() {
+        $request = [
+            "id" => "1",
+            "name" => "GADGET",
+            "description" => "Mediatek G96"
+        ];
+
+        $category = new Category($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
+    }
+    public function testCreateQueryBuilder() {
+        $request = [
+            "id" => "1",
+            "name" => "GADGET",
+            "description" => "Mediatek G96"
+        ];
+
+        $category = Category::query()->create($request);
+
+        self::assertNotNull($category->id);
+    }
+
+    public function testUpdateMass() {
+        $this->seed(CategorySeeder::class);
+
+        $request = [
+            "name" => "Food Updated",
+            "description" => "Description Category Updated"
+        ];
+
+        $category = Category::query()->find("FOOD");
+
+        // $category->fill($request); // tidak secara langsung menyimpan ke database
+        // $category->save(); // perlu memanggil method save jika ingin menyimpan nya
+
+        $category->update($request); // langsung menyimpang ke database
+
+        self::assertNotNull($category->id);
+    }
 }
 
