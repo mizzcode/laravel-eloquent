@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\IsActiveScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,4 +20,11 @@ class Category extends Model
         "name",
         "description"
     ];
+
+    // untuk mendaftarkan global scope ke model
+    protected static function booted()
+    {
+        parent::booted();
+        self::addGlobalScope(new IsActiveScope);
+    }
 }

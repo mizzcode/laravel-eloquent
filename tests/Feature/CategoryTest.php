@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Scopes\IsActiveScope;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
@@ -190,6 +192,26 @@ class CategoryTest extends TestCase
         $category->update($request); // langsung menyimpang ke database
 
         self::assertNotNull($category->id);
+    }
+
+    public function testGlobalScope() {
+        $category = new Category;
+        $category->id = "FOOD";
+        $category->name = "Whiskas";
+        $category->is_active = false;
+        $category->save();
+
+        // ketika kita query maka otomatis akan menambahkan and is_active sesuai yang kita
+        // daftarkan di global scope pada model
+        $category = Category::query()->find($category->id);
+        Log::info(json_encode($category));
+        self::assertNull($category);
+
+        // agar melakuka query tanpa global scope bisa menggunakan method withoutGlocalScope,
+        // jika lebih dari 1 class global scope maka gunakan array
+        $category = Category::query()->withoutGlobalScope(IsActiveScope::class)->find("FOOD");
+        Log::info(json_encode($category));
+        self::assertNotNull($category);
     }
 }
 
