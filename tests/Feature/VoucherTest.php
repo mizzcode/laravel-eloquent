@@ -20,4 +20,21 @@ class VoucherTest extends TestCase
         Log::info(json_encode($voucher));
         self::assertNotNull($voucher->id);
     }
+
+    public function testSoftDelete() {
+        $this->seed(VoucherSeeder::class);
+
+        $voucher = Voucher::query()->where("name", "wifi.id")->first();
+        Log::info(json_encode($voucher));
+        $voucher->delete();
+
+        $voucher = Voucher::query()->where("name", "wifi.id")->first();
+        Log::info(json_encode($voucher));
+        self::assertNull($voucher);
+
+        // tambahkan method withTrashed untuk mengambil data yang termasuk softDelete
+        $voucher = Voucher::withTrashed()->where("name", "wifi.id")->first();
+        Log::info(json_encode($voucher));
+        self::assertNotNull($voucher);
+    }
 }
