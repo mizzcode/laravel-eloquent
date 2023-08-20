@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Scopes\IsActiveScope;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\ProductSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
@@ -212,6 +213,22 @@ class CategoryTest extends TestCase
         $category = Category::query()->withoutGlobalScope(IsActiveScope::class)->find("FOOD");
         Log::info(json_encode($category));
         self::assertNotNull($category);
+    }
+
+    public function testRelationshipOneToMany() {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::query()->find("FOOD");
+        self::assertNotNull($category);
+
+        Log::info(json_encode($category));
+
+        $product = $category->products;
+        
+        self::assertNotNull($product);
+        self::assertCount(2, $product);
+
+        Log::info(json_encode($product));
     }
 }
 
