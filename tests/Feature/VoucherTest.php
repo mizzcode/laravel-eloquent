@@ -37,4 +37,24 @@ class VoucherTest extends TestCase
         Log::info(json_encode($voucher));
         self::assertNotNull($voucher);
     }
+
+    public function testLocalScope() {
+        $voucher = new Voucher;
+        $voucher->name = "wifi.id";
+        $voucher->is_active = true;
+        $voucher->save();
+
+        // local scope
+        // karena di model voucher ada method scopeActive, kita perlu menyebutnya active saja tanpa prefix scope
+        $total = Voucher::query()->active()->count();
+        self::assertEquals(1, $total);
+        Log::info(json_encode("Total = " . $total));
+
+        // local scope
+        // selalu di awali dengan lowercase
+        // karena di model voucher ada method scopeNonActive, kita perlu menyebutnya nonActive saja tanpa prefix scope
+        $total = Voucher::query()->nonActive()->count();
+        self::assertEquals(0, $total);
+        Log::info(json_encode("Total = " . $total));
+    }
 }
